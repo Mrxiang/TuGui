@@ -1,1 +1,3 @@
-# x8
+#
+a python gui for tushare
+
