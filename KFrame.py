@@ -17,12 +17,10 @@ class KFrame(Frame):
         '''初始化方法'''
         super().__init__(root)  # 调用父类的初始化方法
         self.root = root
-        self.pack(side=TOP, fill=BOTH, expand=1)  # 此处填充父窗体
-        self.label = Label(self, text='这是一个Tkinter和Matplotlib相结合的小例子')
+        # self.pack(side=TOP, fill=BOTH, expand=1)  # 此处填充父窗体
+        self.label = Label(self.root, text='这是一个Tkinter和Matplotlib相结合的小例子')
         self.label.pack()
-        self.figure = plt.figure(figsize=(24, 15))
-        self.canvas = FigureCanvasTkAgg(self.figure, self.root)
-        self.canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
+        self.canvas = Canvas()  # 创建一块显示图形的画布
         self.draw_matplotlib(code)
 
     def draw_matplotlib(self, code=None):
@@ -58,9 +56,10 @@ class KFrame(Frame):
         plt.rcParams['axes.unicode_minus'] = False
 
         # 创建子图
-        # plt.clear()
+        self.figure = plt.figure(figsize=(24, 15))
         self.figure.clf()
-        ax = self.figure.subplots()
+        # ax = self.figure.subplots()
+        ax = self.figure.add_subplot(111)
         # ax.clear()
         # fig.subplots_adjust(bottom=0.2)
         # 设置X轴刻度为日期时间
@@ -78,6 +77,8 @@ class KFrame(Frame):
         plt.plot(tlist, df['ma20'].values, 'g--', label='ma20')
         plt.legend(loc='best', shadow=True)
         plt.grid()
+        self.canvas = FigureCanvasTkAgg(self.figure, master=self.root)
+        self.canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
         self.canvas.draw()
 
     def destroy(self):

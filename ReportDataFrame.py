@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import  *
 from Utils import  *
 from KFrame import  *
+from MatFrame import  *
 from tkinter import  ttk
 
 class ReportDataFrame( Frame ):
@@ -24,11 +25,16 @@ class ReportDataFrame( Frame ):
         bottom_paned_window = PanedWindow(main_paned_window, orient=HORIZONTAL, sashrelief=SUNKEN)
         main_paned_window.add(bottom_paned_window)
 
-        self.kframe = KFrame(bottom_paned_window, code='000333')
-        bottom_paned_window.add(self.kframe)
+        self.bottom_left_window= Frame( bottom_paned_window )
+        bottom_paned_window.add( self.bottom_left_window )
+        # self.kframe = KFrame(bottom_paned_window, code='000333')
+        self.matframe = MatFrame(bottom_paned_window, code='000333')
 
-        self.notice_lable = Label(bottom_paned_window, text=MapUtils.get('jlrdc'))
-        bottom_paned_window.add(self.notice_lable)
+
+        self.bottom_right_window = Frame(bottom_paned_window)
+        bottom_paned_window.add( self.bottom_right_window)
+        self.notice_lable = Label(self.bottom_right_window, text=MapUtils.get('jlrdc'))
+        self.notice_lable.pack(fill=X)
 
     def create_data_frame(self, root):
         df = ts.get_report_data(2020, 3)
@@ -44,22 +50,22 @@ class ReportDataFrame( Frame ):
         # 设置表格内容
         # show表示这个部件显示哪种功能，“tree”表示仅显示第一列（单树模式），“headings”表示显示除一列的其他列（单列表模式），默认是"tree headings"，显示所有列。注意，‘#0’（第一列）是永远存在的
         # selectmode	定义如何去选择一行。"extended"是可选多行（用Ctrl+鼠标）， “browse” 是只能选一行， “none"是不能改变选择，默认是"extended”
-        tree = ttk.Treeview(root, show="headings", columns=columns, selectmode=tk.BROWSE)
+        self.tree = ttk.Treeview(root, show="headings", columns=columns, selectmode=tk.BROWSE)
 
         """
             定义滚动条控件
             orient为滚动条的方向，vertical--纵向，horizontal--横向
             command=self.tree.yview 将滚动条绑定到treeview控件的Y轴
         """
-        VScrollX = ttk.Scrollbar(tree, orient='horizontal', command=tree.xview)
-        VScrollY = ttk.Scrollbar(tree, orient='vertical', command=tree.yview)
+        VScrollX = ttk.Scrollbar(self.tree, orient='horizontal', command=self.tree.xview)
+        VScrollY = ttk.Scrollbar(self.tree, orient='vertical', command=self.tree.yview)
         # VScrollY.place(relx=0.971, rely=0.028, relwidth=0.024, relheight=0.958)
         VScrollX.pack(fill=X, side=BOTTOM)
         VScrollY.pack(fill=Y, side=RIGHT)
 
         # 给treeview添加配置
-        tree.configure(xscrollcommand=VScrollX.set)
-        tree.configure(yscrollcommand=VScrollY.set)
+        self.tree.configure(xscrollcommand=VScrollX.set)
+        self.tree.configure(yscrollcommand=VScrollY.set)
         # 设置表格文字居中
         # column(column, option=None, **kw)给各列设置属性，或返回属性。
         # 第一个column是列标识符.
@@ -71,20 +77,20 @@ class ReportDataFrame( Frame ):
         # width：列宽，单位是像素。
         # 提示：如果要设置树状结构那列，用column=“#0”
         for col in columns:
-            tree.column(col, anchor="center")
-            tree.heading(col, text=col)
-            tree.column('#0', stretch=0)
-            tree.heading(col, text=col, command=lambda _col=col: self.treeview_sort_column(tree, _col, False))
+            self.tree.column(col, anchor="center")
+            self.tree.heading(col, text=col)
+            self.tree.column('#0', stretch=0)
+            self.tree.heading(col, text=col, command=lambda _col=col: self.treeview_sort_column(self.tree, _col, False))
 
         print('-----------')
         for rowIndex in df.index:
             # print( df.loc[rowIndex].values )
-            tree.insert('', rowIndex, values=tuple(df.loc[rowIndex].values))
+            self.tree.insert('', rowIndex, values=tuple(df.loc[rowIndex].values))
         print('-----------')
 
-        tree.pack(expand=True, fill=tk.BOTH)
-        tree.bind('<ButtonRelease-1>', self.treeview_click)
-        tree.bind('<<TreeviewSelect>>', self.treeview_select)
+        self.tree.pack(expand=True, fill=tk.BOTH)
+        self.tree.bind('<ButtonRelease-1>', self.treeview_click)
+        self.tree.bind('<<TreeviewSelect>>', self.treeview_select)
 
     # 获取当前点击行的值
     def treeview_click(event):  # 单击
