@@ -40,7 +40,7 @@ def main():
     #增加数据分析窗口
 
     report_data_frame = ReportDataFrame( window  )
-    # report_data_frame.pack()
+    report_data_frame.pack()
 
     window.mainloop()
 

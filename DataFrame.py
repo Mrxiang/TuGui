@@ -1,3 +1,4 @@
+
 import tkinter as tk
 from tkinter import  *
 from Utils import  *
@@ -5,39 +6,34 @@ from KFrame import  *
 from MatFrame import  *
 from tkinter import  ttk
 
-class ReportDataFrame(Frame ):
-    def __init__(self, root=None):
-        super().__init__(root)  # 调用父类的初始化方法
+class DataFrame(Frame):
+    def __init__(self, root =None):
+        super().__init__(root)
         self.root = root
-        self.create_paned_window(self.root)
+        self.create_main_window(self.root)
 
-    def create_paned_window(self, root):
-        main_paned_window = PanedWindow(root, orient=VERTICAL, sashrelief=SUNKEN)  # 默认是左右分布的
+    def create_main_window(self, root ):
+        main_paned_window = PanedWindow(root, orient= VERTICAL, sashrelief=SUNKEN)  # 默认是左右分布的
         main_paned_window.pack(fill=BOTH, expand=1)
 
         top_paned_window = PanedWindow(main_paned_window, orient=HORIZONTAL, sashrelief=SUNKEN)
-        main_paned_window.add(top_paned_window)
-
+        main_paned_window.add( top_paned_window )
         top_frame = Frame(top_paned_window)
         top_paned_window.add(top_frame)
-
         self.create_data_frame(top_frame)
 
-
-        bottom_paned_window = PanedWindow(main_paned_window, orient=HORIZONTAL, sashrelief=SUNKEN)
+        bottom_paned_window = PanedWindow(main_paned_window,orient=HORIZONTAL, sashrelief=SUNKEN)
         main_paned_window.add(bottom_paned_window)
 
-        self.bottom_left_window= Frame( bottom_paned_window )
-        bottom_paned_window.add( self.bottom_left_window )
-        # self.kframe = KFrame(bottom_paned_window, code='000333')
-        self.matframe = MatFrame(bottom_paned_window)
+        bottom_left_window = Frame( bottom_paned_window)
+        bottom_paned_window.add( bottom_left_window )
+        mform = MatFrame( bottom_left_window )
+        # kframe = KFrame(bottom_paned_window, code='000333')
 
-
-        self.bottom_right_window = Frame(bottom_paned_window)
-        bottom_paned_window.add( self.bottom_right_window)
-        self.notice_lable = Label(self.bottom_right_window, text=MapUtils.get('jlrdc'))
-        self.notice_lable.pack(fill=X)
-
+        bottom_right_window = Frame( bottom_paned_window)
+        bottom_paned_window.add( bottom_right_window)
+        label_two = Label( bottom_right_window, text="Message")
+        label_two.pack( fill=X)
     def create_data_frame(self, root):
         df = ts.get_report_data(2020, 3)
         df = df.drop_duplicates(['code'], keep='first')

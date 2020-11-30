@@ -3,10 +3,14 @@ from tkinter import *
 import  tkinter as tk
 from MatFrame import  *
 from KFrame import  *
+from tkinter import  ttk
+from  DataFrame import  *
+
 def do_job():
     global counter
     counter += 1
     print( counter )
+
 
 def create_menu( root ):
     # 第5步，创建一个菜单栏，这里我们可以把他理解成一个容器，在窗口的上方
@@ -22,7 +26,7 @@ def create_menu( root ):
     filemenu.add_command(label='Open', command=do_job)
     filemenu.add_command(label='Save', command=do_job)
     filemenu.add_separator()  # 添加一条分隔线
-    filemenu.add_command(label='Exit', command=window.quit)  # 用tkinter里面自带的quit()函数
+    filemenu.add_command(label='Exit', command=quit)  # 用tkinter里面自带的quit()函数
 
     # 第7步，创建一个Edit菜单项（默认不下拉，下拉内容包括Cut，Copy，Paste功能项）
     editmenu = tk.Menu(menubar, tearoff=0)
@@ -43,38 +47,20 @@ def create_menu( root ):
 
     # 第11步，创建菜单栏完成后，配置让菜单栏menubar显示出来
     root.config(menu=menubar)
-def create_main_window( root ):
-    main_paned_window = PanedWindow(root, orient= VERTICAL, sashrelief=SUNKEN)  # 默认是左右分布的
-    main_paned_window.pack(fill=BOTH, expand=1)
 
-    top_paned_window = PanedWindow(main_paned_window, orient=HORIZONTAL, sashrelief=SUNKEN)
-    main_paned_window.add( top_paned_window )
+def main():
+    # 第1步，实例化object，建立窗口window
+    window = tk.Tk()
 
-    bottom_paned_window = PanedWindow(main_paned_window,orient=HORIZONTAL, sashrelief=SUNKEN)
-    main_paned_window.add(bottom_paned_window)
+    # 第2步，给窗口的可视化起名字
+    window.title('My Window')
 
-    bottom_left_window = Frame( bottom_paned_window)
-    bottom_paned_window.add( bottom_left_window )
-    mform = MatFrame( bottom_left_window,code='000333' )
-    # kframe = KFrame(bottom_paned_window, code='000333')
+    # 第3步，设定窗口的大小(长 * 宽)
+    window.geometry('500x300')  # 这里的乘是小x
+    create_menu( window )
+    dataframe =DataFrame( window )
+    dataframe.pack()
+    mainloop()
 
-    bottom_right_window = Frame( bottom_paned_window)
-    bottom_paned_window.add( bottom_right_window)
-    label_two = Label( bottom_right_window, text="Message")
-    label_two.pack( fill=X)
-
-
-
-# 第1步，实例化object，建立窗口window
-window = tk.Tk()
-
-# 第2步，给窗口的可视化起名字
-window.title('My Window')
-
-# 第3步，设定窗口的大小(长 * 宽)
-window.geometry('500x300')  # 这里的乘是小x
-create_menu( window )
-create_main_window( window )
-
-mainloop()
-# 分割线上的类似正方形的东西就是handle
+if __name__ == '__main__':
+    main()

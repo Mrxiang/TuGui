@@ -97,5 +97,5 @@ if __name__ == '__main__':
     root.title('数学曲线窗口')
     root.geometry('560x400+200+200')
     app = KFrame(root=root, code='000333')
-
+    app.pack()
     root.mainloop()
