@@ -18,8 +18,8 @@ from matplotlib.figure import Figure
 
 class MatFrame(Frame):
     def __init__(self, root =None):
-        self.root =  root  # 创建主窗体
         super().__init__(root)
+        self.root =  root  # 创建主窗体
         self.figure = Figure(figsize=(5, 4), dpi=100)
         self.f_plot = self.figure.add_subplot(111)
         self.canvs = FigureCanvasTkAgg(self.figure, self)
