@@ -5,7 +5,7 @@ from MatFrame import  *
 from KFrame import  *
 from tkinter import  ttk
 from  DataFrame import  *
-
+from ReportDataFrame import  *
 def do_job():
     global counter
     counter += 1
@@ -58,8 +58,8 @@ def main():
     # 第3步，设定窗口的大小(长 * 宽)
     window.geometry('500x300')  # 这里的乘是小x
     create_menu( window )
-    dataframe =DataFrame( window )
-    dataframe.pack()
+    reportframe =ReportDataFrame( window )
+    reportframe.pack()
     mainloop()
 
 if __name__ == '__main__':

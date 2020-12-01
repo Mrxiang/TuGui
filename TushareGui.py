@@ -1,7 +1,7 @@
 import  tkinter as tk
 from tkinter import  *
 from  ReportDataFrame import  *
-
+from DataFrame import  *
 def create_menu(root ):
     menubar = tk.Menu(root)
     filemenu = tk.Menu(menubar, tearoff=0)
@@ -39,9 +39,10 @@ def main():
     create_menu( window )
     #增加数据分析窗口
 
-    report_data_frame = ReportDataFrame( window  )
-    report_data_frame.pack()
-
+    # report_data_frame = ReportDataFrame( window  )
+    # report_data_frame.pack()
+    dataframe =DataFrame( window )
+    dataframe.pack()
     window.mainloop()
 
 

@@ -30,12 +30,12 @@ class ReportDataFrame(Frame ):
         self.bottom_left_window= Frame( bottom_paned_window )
         bottom_paned_window.add( self.bottom_left_window )
         # self.kframe = KFrame(bottom_paned_window, code='000333')
-        self.matframe = MatFrame(bottom_paned_window)
-
+        self.matframe = MatFrame(self.bottom_left_window)
+        self.matframe.pack()
 
         self.bottom_right_window = Frame(bottom_paned_window)
         bottom_paned_window.add( self.bottom_right_window)
-        self.notice_lable = Label(self.bottom_right_window, text=MapUtils.get('jlrdc'))
+        self.notice_lable = Label(self.bottom_right_window, text='Message')
         self.notice_lable.pack(fill=X)
 
     def create_data_frame(self, root):
@@ -95,7 +95,7 @@ class ReportDataFrame(Frame ):
         self.tree.bind('<<TreeviewSelect>>', self.treeview_select)
 
     # 获取当前点击行的值
-    def treeview_click(event):  # 单击
+    def treeview_click(self,event):  # 单击
         # selfs = event.widget.selection()  # event.widget获取Treeview对象，调用selection获取选择对象名称
         tree = event.widget  # event.widget获取Treeview对象，调用selection获取选择对象名称
         for item in tree.selection():
@@ -105,13 +105,13 @@ class ReportDataFrame(Frame ):
     # 鼠标左键抬起
 
     # 鼠标选中一行回调
-    def treeview_select(event):
+    def treeview_select(self,event):
         # selfs = event.widget.selection()  # event.widget获取Treeview对象，调用selection获取选择对象名称
         tree = event.widget  # event.widget获取Treeview对象，调用selection获取选择对象名称
         for item in tree.selection():
             item_text = tree.item(item, "values")
             print(item_text)
-            # self.kframe.draw_matplotlib(item_text[0])
+            self.matframe.draw_matplotlib(item_text[0])
 
     # 选中行
     def treeview_sort_column(self,treeview, col, reverse):  # Treeview、列名、排列方式

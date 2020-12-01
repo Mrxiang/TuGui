@@ -27,12 +27,13 @@ class DataFrame(Frame):
 
         bottom_left_window = Frame( bottom_paned_window)
         bottom_paned_window.add( bottom_left_window )
-        mform = MatFrame( bottom_left_window )
+        self.mframe = MatFrame( bottom_left_window )
+        self.mframe.pack()
         # kframe = KFrame(bottom_paned_window, code='000333')
 
         bottom_right_window = Frame( bottom_paned_window)
         bottom_paned_window.add( bottom_right_window)
-        label_two = Label( bottom_right_window, text="Message")
+        label_two = Label( bottom_right_window, text=MapUtils.get('jlrdc'))
         label_two.pack( fill=X)
     def create_data_frame(self, root):
         df = ts.get_report_data(2020, 3)
@@ -91,7 +92,7 @@ class DataFrame(Frame):
         self.tree.bind('<<TreeviewSelect>>', self.treeview_select)
 
     # 获取当前点击行的值
-    def treeview_click(event):  # 单击
+    def treeview_click(self,event):  # 单击
         # selfs = event.widget.selection()  # event.widget获取Treeview对象，调用selection获取选择对象名称
         tree = event.widget  # event.widget获取Treeview对象，调用selection获取选择对象名称
         for item in tree.selection():
@@ -101,13 +102,13 @@ class DataFrame(Frame):
     # 鼠标左键抬起
 
     # 鼠标选中一行回调
-    def treeview_select(event):
+    def treeview_select(self,event):
         # selfs = event.widget.selection()  # event.widget获取Treeview对象，调用selection获取选择对象名称
         tree = event.widget  # event.widget获取Treeview对象，调用selection获取选择对象名称
         for item in tree.selection():
             item_text = tree.item(item, "values")
             print(item_text)
-            # self.kframe.draw_matplotlib(item_text[0])
+            self.mframe.draw_matplotlib(item_text[0])
 
     # 选中行
     def treeview_sort_column(self,treeview, col, reverse):  # Treeview、列名、排列方式

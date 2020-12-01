@@ -20,12 +20,10 @@ class MatFrame(Frame):
     def __init__(self, root =None):
         self.root =  root  # 创建主窗体
         super().__init__(root)
-        self.canvas = tk.Canvas()  # 创建一块显示图形的画布
         self.figure = Figure(figsize=(5, 4), dpi=100)
         self.f_plot = self.figure.add_subplot(111)
-        self.canvs = FigureCanvasTkAgg(self.figure, self.root)
+        self.canvs = FigureCanvasTkAgg(self.figure, self)
         self.canvs.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
-
 
 
     def draw_matplotlib(self, code=None):
@@ -62,6 +60,7 @@ class MatFrame(Frame):
         # ax.clear()
         # fig.subplots_adjust(bottom=0.2)
         # 设置X轴刻度为日期时间
+        self.f_plot.clear()
         self.f_plot.xaxis_date()
         self.f_plot.autoscale_view()
         # plt.setp(plt.gca().get_xticklabels(), rotation=45)
@@ -76,9 +75,7 @@ class MatFrame(Frame):
         plt.plot(tlist, df['ma20'].values, 'g--', label='ma20')
         plt.legend(loc='best', shadow=True)
         plt.grid()
-        self.canvas = FigureCanvasTkAgg(self.figure, self.root)
-        self.canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
-        self.canvas.draw()
+        self.canvs.draw()
 
 if __name__ == "__main__":
     form = MatFrame()
