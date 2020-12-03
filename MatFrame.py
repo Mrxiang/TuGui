@@ -57,8 +57,6 @@ class MatFrame(Frame):
         plt.rcParams['font.sans-serif'] = [u'SimHei']
         plt.rcParams['axes.unicode_minus'] = False
 
-        # ax.clear()
-        # fig.subplots_adjust(bottom=0.2)
         # 设置X轴刻度为日期时间
         self.f_plot.clear()
         self.f_plot.xaxis_date()

@@ -13,15 +13,17 @@ import mpl_finance as mpf
 class KFrame(Frame):
     """一个经典的GUI写法"""
 
-    def __init__(self, root=None, code = None):
+    def __init__(self, root=None):
         '''初始化方法'''
         super().__init__(root)  # 调用父类的初始化方法
         self.root = root
-        # self.pack(side=TOP, fill=BOTH, expand=1)  # 此处填充父窗体
-        self.label = Label(self.root, text='这是一个Tkinter和Matplotlib相结合的小例子')
+        self.pack(side=TOP, fill=BOTH, expand=1)  # 此处填充父窗体
+        self.label = Label(self, text='这是一个Tkinter和Matplotlib相结合的小例子')
         self.label.pack()
-        self.canvas = Canvas()  # 创建一块显示图形的画布
-        self.draw_matplotlib(code)
+        self.figure = plt.figure(figsize=(24, 15))
+        self.f_plot = self.figure.add_subplot(111)
+        self.canvas = FigureCanvasTkAgg(self.figure, self.root)
+        self.canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
 
     def draw_matplotlib(self, code=None):
         """创建绘图对象"""
@@ -56,31 +58,26 @@ class KFrame(Frame):
         plt.rcParams['axes.unicode_minus'] = False
 
         # 创建子图
-        self.figure = plt.figure(figsize=(24, 15))
-        self.figure.clf()
-        # ax = self.figure.subplots()
-        ax = self.figure.add_subplot(111)
+        # plt.clear()
         # ax.clear()
         # fig.subplots_adjust(bottom=0.2)
         # 设置X轴刻度为日期时间
-        ax.xaxis_date()
-        ax.autoscale_view()
+        self.f_plot.xaxis_date()
+        self.f_plot.autoscale_view()
         # plt.setp(plt.gca().get_xticklabels(), rotation=45)
         plt.xticks(rotation=45)
         plt.yticks()
         plt.title(" {0}".format(code))
         plt.xlabel("date")
         plt.ylabel("price")
-        mpf.candlestick_ohlc(ax, alist, colorup='red', colordown='green')
+        mpf.candlestick_ohlc(self.f_plot, alist, colorup='red', colordown='green')
         #  画 10,20日均线
         plt.plot(tlist, df['ma10'].values, 'blue', label='ma10')
         plt.plot(tlist, df['ma20'].values, 'g--', label='ma20')
         plt.legend(loc='best', shadow=True)
         plt.grid()
-        self.canvas = FigureCanvasTkAgg(self.figure, master=self.root)
-        self.canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
         self.canvas.draw()
-
+        # self.canvas.show()
     def destroy(self):
         """重写destroy方法"""
         super().destroy()
@@ -95,7 +92,11 @@ class KFrame(Frame):
 if __name__ == '__main__':
     root = Tk()
     root.title('数学曲线窗口')
-    root.geometry('560x400+200+200')
-    app = KFrame(root=root, code='000333')
-    app.pack()
+    root.geometry('320x320+200+200')
+    kframe = KFrame(root)
+
+    button= Button(root, text='pic1', command=lambda:kframe.draw_matplotlib('000001')).pack(side=LEFT, anchor=W)
+    button = Button(root, text='pic2', command=lambda:kframe.draw_matplotlib('000002')).pack(side=LEFT, anchor=W)
+    # Button(root, text='pic3', command=kframe.draw_matplotlib('000003')).pack(side=LEFT, anchor=W)
+
     root.mainloop()
