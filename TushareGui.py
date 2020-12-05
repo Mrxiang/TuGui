@@ -2,9 +2,9 @@ from tkinter import *
 import  tkinter as tk
 from MatFrame import  *
 from KFrame import  *
+from ReportMainFrame import  *
 from MainFrame import  *
-from ReportDataFrame import  *
-
+from HomeFrame import  *
 from tkinter import messagebox
 
 class Application(Frame): #自己创建的这个类就是一个组件，这个要继承Frame类
@@ -33,6 +33,7 @@ def create_menu( root ):
     menubar = tk.Menu(root)
     # 第6步，创建一个File菜单项（默认不下拉，下拉内容包括New，Open，Save，Exit功能项）
     stockmenu = tk.Menu(menubar, tearoff=0)
+    menubar.add_command(label='主页', command=add_home_frame)
     menubar.add_cascade(label='个股策略', menu=stockmenu)
     # 在File中加入New、Open、Save等小菜单，即我们平时看到的下拉菜单，每一个小菜单对应命令操作。
     stockmenu.add_command(label='业绩报表', command=add_report_frame)
@@ -44,10 +45,17 @@ def create_menu( root ):
     # 第11步，创建菜单栏完成后，配置让菜单栏menubar显示出来
     root.config(menu=menubar)
 
+
+def add_home_frame():
+    for widget in mainframe.winfo_children():
+        widget.destroy()
+    homeframe = HomeFrame(mainframe)
+    homeframe.pack()
+
 def add_report_frame():
     for widget in mainframe.winfo_children():
         widget.destroy()
-    reportframe = ReportDataFrame(mainframe)
+    reportframe = ReportMainFrame(mainframe)
     reportframe.pack()
 
 def add_industry_frame():
