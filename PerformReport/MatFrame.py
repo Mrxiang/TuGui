@@ -24,6 +24,7 @@ class MatFrame(Frame):
         self.f_plot = self.figure.add_subplot(111)
         self.canvs = FigureCanvasTkAgg(self.figure, self)
         self.canvs.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
+        # self.draw_matplotlib('000333')
 
 
     def draw_matplotlib(self, code=None):
@@ -61,7 +62,6 @@ class MatFrame(Frame):
         self.f_plot.clear()
         self.f_plot.xaxis_date()
         self.f_plot.autoscale_view()
-        # plt.setp(plt.gca().get_xticklabels(), rotation=45)
         plt.xticks(rotation=45)
         plt.yticks()
         plt.title(" {0}".format(code))
@@ -74,6 +74,5 @@ class MatFrame(Frame):
         plt.legend(loc='best', shadow=True)
         plt.grid()
         self.canvs.draw()
-
 if __name__ == "__main__":
     form = MatFrame()
