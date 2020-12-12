@@ -24,9 +24,25 @@ class HelpFrame(Frame): #自己创建的这个类就是一个组件，这个要�
 
 
 if __name__ == '__main__':
-    root = Tk()
-    root.title('数学曲线窗口')
-    root.geometry('320x320+200+200')
-    helpframe = HelpFrame( root )
+    window = tk.Tk()
+
+    # 设置窗口大小
+    winWidth = window.winfo_screenwidth()
+    winHeight = window.winfo_screenheight()
+    # 获取屏幕分辨率
+    screenWidth = window.winfo_screenwidth()
+    screenHeight = window.winfo_screenheight()
+
+    x = int((screenWidth - winWidth) / 2)
+    y = int((screenHeight - winHeight) / 2)
+    # 设置主窗口标题
+    window.title("像机构一样思考")
+    # 设置窗口初始位置在屏幕居中
+    window.geometry("%sx%s+%s+%s" % (winWidth, winHeight, x, y))
+    # 设置窗口图标
+    # window.iconbitmap("./image/android_icon.ico")
+    # 设置窗口宽高固定
+    window.resizable(True, True)
+    helpframe = HelpFrame(window)
     helpframe.pack()
-    root.mainloop()
+    mainloop()

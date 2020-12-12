@@ -2,6 +2,10 @@ from PerformReport.Utils import  *
 from PerformReport.MatFrame import  *
 from tkinter import  ttk
 import  pandas as pd
+from tkinter import  *
+
+from PerformReport.ReportData import  *
+
 
 class ReportMainFrame(Frame ):
     def __init__(self, root=None):
@@ -36,7 +40,7 @@ class ReportMainFrame(Frame ):
         quarter_box.pack(side=tk.LEFT)
         quarter_box.current(0)  # 选择第一个
 
-        query = Button(title_frame, text='查询', command = lambda :self.query_report( yvalue, qvalue))
+        query = Button(title_frame, text='查询', command = lambda :self.query_report( yvalue.get(), qvalue.get()))
         query.pack(side=LEFT)
 
         # self.pb = ttk.Progressbar(title_frame, length=400, value=0, mode="determinate")
@@ -47,6 +51,7 @@ class ReportMainFrame(Frame ):
         # load current report
         self.query_current_report()
         top_paned_window.add(self.data_frame)
+        self.data_frame.pack(fill=BOTH, expand=1)
 
         bottom_paned_window = PanedWindow(main_paned_window, orient=HORIZONTAL, sashrelief=SUNKEN)
         main_paned_window.add(bottom_paned_window)
@@ -69,17 +74,11 @@ class ReportMainFrame(Frame ):
         quarter = (today.month - 1) // 3 + 1
         print( year, quarter , type(year),  type(quarter))
         try:
-            df = ts.get_report_data( year,  quarter)
-            df = df.drop_duplicates(['code'], keep='first')
-            sub_df = df[['eps', 'eps_yoy', 'bvps', 'roe', 'epcf', 'net_profits', 'profits_yoy']]
-            sub_df.fillna(0)
-            df[['eps', 'eps_yoy', 'bvps', 'roe', 'epcf', 'net_profits', 'profits_yoy']] = sub_df
-            print("----")
-            print(df)
+            df = ReportData().get_forecast_and_report( year,  quarter)
             columns = df.columns.tolist()
-
         except:
-            columns = tuple(ReportDataUtils.keys())
+            # columns = tuple(ReportDataUtils.keys())
+            columns = tuple(ForecastReportDataUtils.keys())
             df =pd.DataFrame(columns=columns)
 
         print("----")
@@ -88,13 +87,9 @@ class ReportMainFrame(Frame ):
         self.tree.pack()
         """
             定义滚动条控件
-            orient为滚动条的方向，vertical--纵向，horizontal--横向
-            command=self.tree.yview 将滚动条绑定到treeview控件的Y轴
         """
         VScrollX = ttk.Scrollbar(self.tree, orient='horizontal', command=self.tree.xview)
         VScrollY = ttk.Scrollbar(self.tree, orient='vertical', command=self.tree.yview)
-        # VScrollX.pack(fill=X, side=BOTTOM)
-        # VScrollY.pack(fill=Y, side=RIGHT)
 
         # 给treeview添加配置
         self.tree.configure(xscrollcommand=VScrollX.set)
@@ -110,12 +105,11 @@ class ReportMainFrame(Frame ):
         # width：列宽，单位是像素。
         # 提示：如果要设置树状结构那列，用column=“#0”
         for col in columns:
-            self.tree.column(col, anchor="center")
-            self.tree.heading(col, text=col)
+            self.tree.column(col, anchor="center", width=20)
+            # self.tree.heading(col, text=col)
             self.tree.column('#0', stretch=0)
-            self.tree.heading(col, text=col, command=lambda _col=col: self.treeview_sort_column(self.tree, _col, False))
+            self.tree.heading(col, text=ForecastReportDataUtils.get(col), command=lambda _col=col: self.treeview_sort_column(self.tree, _col, False))
 
-        print('-----------')
         for rowIndex in df.index:
             # print( df.loc[rowIndex].values )
             self.tree.insert('', rowIndex, values=tuple(df.loc[rowIndex].values))
@@ -126,18 +120,8 @@ class ReportMainFrame(Frame ):
         self.tree.bind('<<TreeviewSelect>>', self.treeview_select)
 
     def query_report(self, year, quart):
-        print(year.get(), quart.get())
-        df = ts.get_report_data( int(year.get()),  int(quart.get()))
-        df = df.drop_duplicates(['code'], keep='first')
-        sub_df = df[['eps', 'eps_yoy', 'bvps', 'roe', 'epcf', 'net_profits', 'profits_yoy']]
-        sub_df.fillna(0)
-        df[['eps', 'eps_yoy', 'bvps', 'roe', 'epcf', 'net_profits', 'profits_yoy']] = sub_df
-        print("----")
-        print(df)
-        print("----")
+        df = ReportData().get_forecast_and_report(year, quart)
         columns = df.columns.tolist()
-        # self.tree = ttk.Treeview(self, show="headings", columns=columns, selectmode=tk.BROWSE)
-        # self.tree.pack(side=BOTTOM)
         """
             定义滚动条控件
             orient为滚动条的方向，vertical--纵向，horizontal--横向
@@ -164,16 +148,12 @@ class ReportMainFrame(Frame ):
         # 提示：如果要设置树状结构那列，用column=“#0”
         for col in columns:
             self.tree.column(col, anchor="center")
-            self.tree.heading(col, text=col)
             self.tree.column('#0', stretch=0)
-            self.tree.heading(col, text=col, command=lambda _col=col: self.treeview_sort_column(self.tree, _col, False))
+            self.tree.heading(col, text=ForecastReportDataUtils.get(col), command=lambda _col=col: self.treeview_sort_column(self.tree, _col, False))
 
-        print('-----------')
         for rowIndex in df.index:
-            # print( df.loc[rowIndex].values )
             self.tree.insert('', rowIndex, values=tuple(df.loc[rowIndex].values))
         print('-----------')
-
         self.tree.pack(expand=True, fill=tk.BOTH)
         self.tree.bind('<ButtonRelease-1>', self.treeview_click)
         self.tree.bind('<<TreeviewSelect>>', self.treeview_select)
@@ -217,3 +197,30 @@ class ReportMainFrame(Frame ):
 
     def start_progress(self):
         self.pb.start()
+
+
+if __name__ == '__main__':
+    # 第1步，实例化object，建立窗口window
+    window = tk.Tk()
+
+    # 设置窗口大小
+    winWidth = window.winfo_screenwidth()
+    winHeight = window.winfo_screenheight()
+    # 获取屏幕分辨率
+    screenWidth = window.winfo_screenwidth()
+    screenHeight = window.winfo_screenheight()
+
+    x = int((screenWidth - winWidth) / 2)
+    y = int((screenHeight - winHeight) / 2)
+    # 设置主窗口标题
+    window.title("像机构一样思考")
+    # 设置窗口初始位置在屏幕居中
+    # window.geometry("%sx%s+%s+%s" % (winWidth, winHeight, x, y))
+    window.geometry("%sx%s+%s+%s" % (winWidth, winHeight, x, y))
+    # 设置窗口图标
+    # window.iconbitmap("./image/android_icon.ico")
+    # 设置窗口宽高固定
+    window.resizable(True, True)
+    reportframe = ReportMainFrame(window)
+    reportframe.pack()
+    mainloop()

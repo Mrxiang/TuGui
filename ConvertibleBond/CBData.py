@@ -3,14 +3,19 @@
 import tushare as ts
 import  pandas as pd
 
-def get_cb_data():
-    pro = ts.pro_api('***********')
-    # 获取可转债基础信息列表
-    df = pro.cb_basic(fields="ts_code,bond_short_name,stk_code,stk_short_name,list_date,delist_date")
-    print('可转债', df.shape)
+
+class CBData():
+    def __init__(self):
+        pass
+    def get_fund_data(self ):
+        pro = ts.pro_api('ac147953b15f6ee963c164fc8ee8ef5228e58b75e5953ba5997ef117')
+        df = pro.cb_basic(fields="ts_code,bond_short_name,stk_code,stk_short_name,list_date,delist_date")
+
+        return  df
 
 
 if __name__ == "__main__":
-    df = get_cb_data()
+    df = CBData().get_fund_data()
+    print( df.head())
 
 
