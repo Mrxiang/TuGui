@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 
 from Token import Token
 
-pro = ts.pro_api('ac147953b15f6ee963c164fc8ee8ef5228e58b75e5953ba5997ef117')
+pro = ts.pro_api('***********')
 
 df = pro.cn_m(start_m='201901', end_m='202003')
 print( df )

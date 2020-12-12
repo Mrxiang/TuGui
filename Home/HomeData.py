@@ -13,7 +13,7 @@ class HomeData(Token):
         super().__init__()  # 调用父类的初始化方法
 
     def get_daily(self, date):
-        pro = ts.pro_api('ac147953b15f6ee963c164fc8ee8ef5228e58b75e5953ba5997ef117')
+        pro = ts.pro_api('***********')
         df = pro.daily(trade_date=date )
         print(df.shape, df.head())
         return  df

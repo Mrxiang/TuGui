@@ -8,7 +8,7 @@ class CBData():
     def __init__(self):
         pass
     def get_fund_data(self ):
-        pro = ts.pro_api('ac147953b15f6ee963c164fc8ee8ef5228e58b75e5953ba5997ef117')
+        pro = ts.pro_api('***********')
         df = pro.cb_basic(fields="ts_code,bond_short_name,stk_code,stk_short_name,list_date,delist_date")
 
         return  df
