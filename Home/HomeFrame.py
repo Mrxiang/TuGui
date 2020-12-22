@@ -1,4 +1,7 @@
+from Home import Utils
 from Home.HomeData import HomeData
+from Home.Utils import HomeDataUtils
+from Home.Watch import Watch
 from PerformReport.MatFrame import  *
 from tkinter import messagebox
 from tkinter import  ttk
@@ -13,17 +16,21 @@ class HomeFrame(Frame ):
         # self.pack()  #这个组件的定位
         self.createWidget()  # 自定义方法，在这个方法里自定义组件
         global timer
-        timer = threading.Timer(1.0, self.get_data_from_threadPoll, [])
+        timer = threading.Timer(60.0, self.get_data_from_threadPool, [])
         timer.start()
         global  threadPool
-        threadPool = ThreadPoolExecutor(max_workers=4, thread_name_prefix="ts_")
+        threadPool = ThreadPoolExecutor(max_workers=4, thread_name_prefix="home_")
     # 以后就在这个方法里面自定义组件
     def createWidget(self):
         #         创建组件
-        label = Label(self, text='主页')
-        label.pack()
-        today_date = (datetime.date.today()).strftime('%Y%m%d')
-        df= HomeData().get_daily( today_date )
+        # self.timestr = StringVar()
+        # label = Label(self, textvariable = self.timestr)
+        # label.pack()
+        # current =datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        # self.timestr1.set(current)
+        watch = Watch(self)
+        watch.start()
+        df= HomeData().get_today_all( )
         print(df)
         columns = df.columns.tolist()
 
@@ -49,9 +56,9 @@ class HomeFrame(Frame ):
         for col in columns:
             self.tree.column(col, anchor="center", width=20)
             # self.tree.heading(col, text=col)
-            self.tree.column('#0', stretch=0)
-            # self.tree.heading(col, text=ForecastReportDataUtils.get(col), command=lambda _col=col: self.treeview_sort_column(self.tree, _col, False))
-            self.tree.heading(col, text=col, command=lambda _col=col: self.treeview_sort_column(self.tree, _col, False))
+            # self.tree.column('#0', stretch=0)
+            self.tree.heading(col, text=HomeDataUtils.get(col), command=lambda _col=col: self.treeview_sort_column(self.tree, _col, False))
+            # self.tree.heading(col, text=col, command=lambda _col=col: self.treeview_sort_column(self.tree, _col, False))
 
         for rowIndex in df.index:
             # print( df.loc[rowIndex].values )
@@ -66,23 +73,23 @@ class HomeFrame(Frame ):
             # print( df.loc[rowIndex].values )
             self.tree.insert('', rowIndex, values=tuple(df.loc[rowIndex].values))
 
-    def get_data_from_threadPoll(self ):
+    def get_data_from_threadPool(self ):
 
-        future = threadPool.submit(self.get_daily_data )
+        future = threadPool.submit(self.get_today_all_data )
         # future.add_done_callback(test_result)
         print('future',future.result())
         df = future.result()
         self.updateWidget( df)
 
-        timer = threading.Timer(1.0, self.get_data_from_threadPoll, [])
+        timer = threading.Timer(60.0, self.get_data_from_threadPool, [])
         timer.start()
-    def get_daily_data(self):
-        today_date = (datetime.date.today()).strftime('%Y%m%d')
-        df = HomeData().get_daily(today_date)
+    def get_today_all_data(self):
+        df = HomeData().get_today_all()
         return  df
 
     def __del__(self):
-        timer.s
+        # timer.s
+        pass
 if __name__ == '__main__':
     root = Tk()
     root.title('数学曲线窗口')

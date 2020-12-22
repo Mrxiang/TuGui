@@ -131,7 +131,7 @@ class ReportData( Token ):
 
 
 if __name__ == "__main__":
-    df = ReportData.get_forecast_and_report(2020, 3)
+    df = ReportData().get_forecast_and_report(2020, 3)
     engine = create_engine('sqlite:///report.db')
     print(df.head(10))
     df.to_sql('report'+'_'+'2020'+'_'+'3', engine, if_exists='replace')

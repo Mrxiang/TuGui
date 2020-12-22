@@ -9,6 +9,8 @@ from ConvertibleBond.CBFrame import   *
 from MainFrame import  *
 from tkinter import messagebox
 
+from New.NewMessage import SplashMessage
+
 
 def create_menu( root ):
     # 第5步，创建一个菜单栏，这里我们可以把他理解成一个容器，在窗口的上方
@@ -89,7 +91,7 @@ def main():
     window.title("像机构一样思考")
     # 设置窗口初始位置在屏幕居中
     # window.geometry("%sx%s+%s+%s" % (winWidth, winHeight, x, y))
-    window.geometry('480x320+200+200')
+    window.geometry('640x480+200+200')
     # 设置窗口图标
     # window.iconbitmap("./image/android_icon.ico")
     # 设置窗口宽高固定
@@ -99,7 +101,14 @@ def main():
     global mainframe
     mainframe = MainFrame( window )
     mainframe.pack(fill=BOTH, expand=1)
-    mainloop()
+
+    message = SplashMessage()
+    message.title('新股')
+    message.geometry('480x320+200+200')
+    message.attributes("-topmost", True)  # 永远处于顶层
+    message.mainloop()
+
+    window.mainloop()
     # 分割线上的类似正方形的东西就是handle
 
 if __name__ == '__main__':
