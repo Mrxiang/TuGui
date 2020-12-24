@@ -1,5 +1,6 @@
 import  akshare as ak
 import datetime
+from dateutil.relativedelta import relativedelta
 
 #获取申万一级行业列表
 # df = pro.index_classify(level='L1', src='SW')
@@ -41,20 +42,27 @@ class IndustryData():
         df = ak.sw_index_cons(index_code=index_code)
         return  df
 
-    def get_index_daily(self , index_code, start_date, end_date):
+    def get_index_daily(self , index_code, start_date=0, end_date=0):
+        if end_date==0:
+            end_date = (datetime.date.today()).strftime('%Y%m%d')
+        if start_date ==0:
+            start_date = (datetime.date.today() - relativedelta(years=+1)).strftime('%Y%m%d')
         df=ak.sw_index_daily(index_code=index_code, start_date=start_date, end_date=end_date)
         return  df
 
-
+    def get_cons_history(self, code):
+        pass
 
 if __name__ == '__main__':
-    today_date = (datetime.date.today()).strftime('%Y-%m-%d')
+    start_date = (datetime.date.today()).strftime('%Y%m%d')
+    end_date = (datetime.date.today() - relativedelta(years=+1)).strftime('%Y%m%d')
     df_index= IndustryData().get_index_spot()
     print( df_index )
     for index, row in df_index.iterrows():
         print( 'index', index, 'row', row)
         df_cons= IndustryData().get_index_cons( row[0])
         print(df_cons)
-
+        df_daily = IndustryData().get_index_daily( index_code=row[0],  start_date=start_date, end_date=end_date)
+        print( df_daily )
 
 

@@ -3,6 +3,14 @@ from tkinter import  *
 from tkinter import messagebox, ttk
 
 from Industry.IndustryData import IndustryData
+import matplotlib
+import matplotlib.pyplot as plt
+from matplotlib.pylab import mpl
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.pylab import mpl
+import mpl_finance as mpf
+from matplotlib.pylab import date2num
 
 
 class IndustryFrame(Frame): #自己创建的这个类就是一个组件，这个要继承Frame类
@@ -88,6 +96,41 @@ class IndustryFrame(Frame): #自己创建的这个类就是一个组件，这个
         self.cons_tree.pack(expand=True, fill=BOTH)
         self.cons_tree.bind('<<TreeviewSelect>>', self.cons_treeview_select)
 
+    def query_index_daily(self, code):
+
+        df = IndustryData().get_index_daily(code)
+        print( df.head(10) )
+
+        df['date']=df['date'].apply( lambda x:date2num(x))
+        ohlc=df[['date','open','high','low','close']]
+        ohlc.rename(columns={'date':'t'}, inplace=True)
+        ohlc['open']=ohlc['open'].apply( lambda  x:float(x))
+        ohlc['high']=ohlc['high'].apply( lambda  x:float(x))
+        ohlc['low']=ohlc['low'].apply( lambda  x:float(x))
+        ohlc['close']=ohlc['close'].apply( lambda  x:float(x))
+
+        print( ohlc.head(10))
+        self.figure = Figure(figsize=(5, 4), dpi=100)
+        self.f_plot = self.figure.add_subplot(111)
+        self.canvs = FigureCanvasTkAgg(self.figure, self)
+        self.canvs.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
+
+
+        self.f_plot.clear()
+        self.f_plot.xaxis_date()
+        self.f_plot.autoscale_view()
+        plt.xticks(rotation=45)
+        plt.yticks()
+        plt.title(" {0}".format(code))
+        plt.xlabel("date")
+        plt.ylabel("price")
+        print( ohlc.head(10))
+        print( ohlc.values)
+        mpf.candlestick_ohlc(self.f_plot, ohlc.values, colorup='red', colordown='green')
+        #  画 10,20日均线
+        plt.legend(loc='best', shadow=True)
+        plt.grid()
+        self.canvs.draw()
     # 鼠标选中一行回调
     def spot_treeview_select(self, event):
         # selfs = event.widget.selection()  # event.widget获取Treeview对象，调用selection获取选择对象名称
@@ -97,6 +140,7 @@ class IndustryFrame(Frame): #自己创建的这个类就是一个组件，这个
             print(item_text[0], item_text)
             # self.matframe.draw_matplotlib(item_text[0])
             self.query_index_cons(item_text[0])
+            self.query_index_daily( item_text[0])
 
     # 选中行
     def spot_treeview_sort(self,treeview, col, reverse):  # Treeview、列名、排列方式
