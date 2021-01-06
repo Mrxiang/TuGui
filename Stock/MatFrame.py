@@ -67,6 +67,7 @@ class MatFrame(Frame):
         plt.title(" {0}".format(code))
         plt.xlabel("date")
         plt.ylabel("price")
+        print( alist.head(10))
         mpf.candlestick_ohlc(self.f_plot, alist, colorup='red', colordown='green')
         #  画 10,20日均线
         plt.plot(tlist, df['ma10'].values, 'blue', label='ma10')

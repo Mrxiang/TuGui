@@ -1,10 +1,10 @@
-from PerformReport.Utils import  *
-from PerformReport.MatFrame import  *
+from Stock.Utils import  *
+from Stock.MatFrame import  *
 from tkinter import  ttk
 import  pandas as pd
 from tkinter import  *
 
-from PerformReport.ReportData import  *
+from Stock.ReportData import  *
 
 
 class ReportMainFrame(Frame ):

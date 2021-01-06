@@ -4,7 +4,7 @@ from Help.HelpFrame import HelpFrame
 from Home.HomeFrame import HomeFrame
 from Industry.IndustryFrame import IndustryFrame
 from Macro.MacroFrame import MacroFrame
-from PerformReport.ReportMainFrame import  *
+from Stock.ReportMainFrame import  *
 from ConvertibleBond.CBFrame import   *
 from MainFrame import  *
 from tkinter import messagebox

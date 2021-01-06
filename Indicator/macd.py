@@ -59,7 +59,8 @@ def plt_macd(df,da):
 if __name__ == '__main__':
     # df = ts.get_hist_data('300911',start='2020-11-01',end='2020-12-16')
     pro = ts.pro_api('ac147953b15f6ee963c164fc8ee8ef5228e58b75e5953ba5997ef117')
-    df = pro.index_daily(ts_code='000333.SZ', start_date='20201101', end_date='20201216')
+    # df = pro.index_daily(ts_code='000333.SZ', start_date='20201101', end_date='20201216')
+    df = ts.pro_bar(ts_code='000333.SZ', start_date='20201101', end_date='20201216')
     df=df.sort_values(by='trade_date')
     da = get_macd(df)
     print( da.head(10) )
