@@ -5,6 +5,7 @@ from tkinter import  *
 import tkinter as tk
 from tkinter import ttk
 
+from New import Utils
 from New.NewData import NewData
 
 
@@ -16,8 +17,6 @@ class SplashMessage(tk.Tk):
         self.create_widget()
 
     def create_widget(self):
-        tk.Label(self, text='标签').pack(fill=BOTH, expand=1)
-
         df= NewData().get_new_share()
         print(df)
         columns = df.columns.tolist()
@@ -45,7 +44,7 @@ class SplashMessage(tk.Tk):
             self.tree.column(col, anchor="center", width=20)
             # self.tree.heading(col, text=col)
             # self.tree.column('#0', stretch=0)
-            self.tree.heading(col, text=col, command=lambda _col=col: self.treeview_sort_column(self.tree, _col, False))
+            self.tree.heading(col, text=Utils.NewDataUtils.get(col), command=lambda _col=col: self.treeview_sort_column(self.tree, _col, False))
             # self.tree.heading(col, text=col, command=lambda _col=col: self.treeview_sort_column(self.tree, _col, False))
 
         for rowIndex in df.index:
@@ -55,7 +54,7 @@ class SplashMessage(tk.Tk):
 
 if __name__ == '__main__':
     win =  tk.Tk()
-    win.title('数学曲线窗口')
+    win.title('新股申购')
     win.geometry('480x320+200+200')
     app = SplashMessage()
     app.title('窗口')

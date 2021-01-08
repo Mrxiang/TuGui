@@ -24,3 +24,18 @@
 # limit_amount 	float 	Y 	个人申购上限（万股）
 # funds 	float 	Y 	募集资金（亿元）
 # ballot 	float 	Y 	中签率
+
+NewDataUtils ={
+    'ts_code':'股票代码',
+    'sub_code': '申购代码',
+    'name': '名称',
+    'ipo_date': '上网发行日期',
+    'issue_date': '上市日期',
+    'amount': 	'发行总量（万股）',
+    'market_amount': 	'上网发行总量（万股）',
+    'price': 	'发行价格',
+    'pe':	    '市盈率',
+    'limit_amount': 	'个人申购上限（万股）',
+    'funds': 	'募集资金（亿元）',
+    'ballot': 	'中签率'
+}

@@ -1,24 +1,24 @@
 
 import  tushare as ts
 from sqlalchemy import create_engine
-
+import datetime
 from Token import Token
+from dateutil.relativedelta import relativedelta
 
-pro = ts.pro_api('***********')
-
-df = pro.cn_m(start_m='201901', end_m='202003')
-print( df )
 
 class MacroData(Token):
     def __init__(self):
         super().__init__()  # 调用父类的初始化方法
-    def get_cn_m(self):
-        df = pro.cn_m(start_m='201901', end_m='202003')
-        print(df)
-        return  df
+        self.pro = ts.pro_api('ac147953b15f6ee963c164fc8ee8ef5228e58b75e5953ba5997ef117')
+
+    def get_cn_m(self, start_m, end_m):
+        df_m = self.pro.cn_m(start_m=start_m, end_m=end_m)
+        print(df_m)
+        return  df_m
 
 if __name__ == "__main__":
-    df = MacroData.get_cn_m()
-    engine = create_engine('sqlite:///macro.db')
+    end_m = (datetime.date.today()).strftime('%Y%m')
+    start_m=(datetime.date.today()-relativedelta(years=+10)).strftime('%Y%m')
+    df = MacroData().get_cn_m(start_m, end_m)
+    df.to_csv(start_m+'_m.csv')
     print(df)
-    df.to_sql('Macro'+'_'+'2020'+'_'+'3', engine, if_exists='replace')

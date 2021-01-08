@@ -2,7 +2,7 @@ import datetime
 from tkinter import  *
 from tkinter import messagebox, ttk
 
-from Industry.IndustryData import IndustryData
+from Industry.IndustryDataL1 import IndustryData
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.pylab import mpl
@@ -13,7 +13,7 @@ import mpl_finance as mpf
 from matplotlib.pylab import date2num
 
 
-class IndustryFrame(Frame): #自己创建的这个类就是一个组件，这个要继承Frame类
+class IndustryFrameL1(Frame): #自己创建的这个类就是一个组件，这个要继承Frame类
 
     def __init__(self, master=None):  # 参数  源码就是这样写，master代表的是父容器
         # Frame是父类，得主动的调用父类 的构造器
@@ -38,6 +38,12 @@ class IndustryFrame(Frame): #自己创建的这个类就是一个组件，这个
         self.plot_frame = Frame( left_paned_window )
         left_paned_window.add( self.plot_frame )
         Label(self.plot_frame, text='matplotlib').pack()
+
+        self.figure = Figure(figsize=(5, 4), dpi=100)
+        self.f_plot = self.figure.add_subplot(111)
+        self.canvs = FigureCanvasTkAgg(self.figure, self.plot_frame)
+        self.canvs.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
+
 
         right_paned_window = PanedWindow(main_paned_window, orient=VERTICAL, sashrelief=SUNKEN)
         main_paned_window.add(right_paned_window)
@@ -108,14 +114,7 @@ class IndustryFrame(Frame): #自己创建的这个类就是一个组件，这个
         ohlc['high']=ohlc['high'].apply( lambda  x:float(x))
         ohlc['low']=ohlc['low'].apply( lambda  x:float(x))
         ohlc['close']=ohlc['close'].apply( lambda  x:float(x))
-
         print( ohlc.head(10))
-        self.figure = Figure(figsize=(5, 4), dpi=100)
-        self.f_plot = self.figure.add_subplot(111)
-        self.canvs = FigureCanvasTkAgg(self.figure, self)
-        self.canvs.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
-
-
         self.f_plot.clear()
         self.f_plot.xaxis_date()
         self.f_plot.autoscale_view()
@@ -127,7 +126,6 @@ class IndustryFrame(Frame): #自己创建的这个类就是一个组件，这个
         print( ohlc.head(10))
         print( ohlc.values)
         mpf.candlestick_ohlc(self.f_plot, ohlc.values, colorup='red', colordown='green')
-        #  画 10,20日均线
         plt.legend(loc='best', shadow=True)
         plt.grid()
         self.canvs.draw()
@@ -187,8 +185,8 @@ class IndustryFrame(Frame): #自己创建的这个类就是一个组件，这个
 
 if __name__ == '__main__':
     root = Tk()
-    root.title('数学曲线窗口')
+    root.title('申万一级行业')
     root.geometry('320x320+200+200')
-    industry_frame = IndustryFrame( root )
+    industry_frame = IndustryFrameL1( root )
     industry_frame.pack(fill=BOTH, expand=1)
     root.mainloop()

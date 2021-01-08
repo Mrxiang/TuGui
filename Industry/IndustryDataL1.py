@@ -15,7 +15,7 @@ from dateutil.relativedelta import relativedelta
 # 获取黄金分类的成份股
 # df = pro.index_member(index_code='850531.SI')
 
-#获取000001.SZ所属行业
+#获取000001. ndvm,nvddnddnnnns,dsldmsdlmsdms.dmslmdlsmldfkfnsdkjiesddekdndvnjdlvndjknjkddkkkkkkkkkkmmmmmmmmmmmmmmmmmmmmmmm                                                                                                                                     v g                                         sSZ所属行业
 # df = pro.index_member(ts_code='000001.SZ')
 
 #获取深圳市场20200320各板块交易数据
@@ -32,7 +32,8 @@ from dateutil.relativedelta import relativedelta
 # sw_index_df = ak.sw_index_daily(index_code="801010", start_date="2019-12-01", end_date="2019-12-07")
 class IndustryData():
     def __init__(self):
-        pass
+        super().__init__()
+
     def get_index_spot(self):
         df = ak.sw_index_spot()
         return df

@@ -7,7 +7,7 @@ import numpy as np
 import tushare as ts
 
 # 邮件构建
-class Mail:
+class Mail():
     def __init__(self):
         super().__init__()  # 调用父类的初始化方法
 
