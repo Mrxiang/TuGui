@@ -11,20 +11,20 @@ class ReportMainFrame(Frame ):
     def __init__(self, root=None):
         super().__init__(root)  # 调用父类的初始化方法
         self.root = root
-        self.create_paned_window(self.root)
+        self.create_paned_window()
 
 
-    def create_paned_window(self, root):
-        main_paned_window = PanedWindow(root, orient=VERTICAL, sashrelief=SUNKEN)  # 默认是左右分布的
+    def create_paned_window(self):
+        main_paned_window = PanedWindow(self, orient=VERTICAL, sashrelief=SUNKEN)  # 默认是左右分布的
         main_paned_window.pack(fill=BOTH, expand=1)
 
         top_paned_window = PanedWindow(main_paned_window, orient=HORIZONTAL, sashrelief=SUNKEN)
         main_paned_window.add(top_paned_window)
 
-        # data_frame = ReportDataFrame(top_paned_window)
-        # top_paned_window.add(data_frame)
         self.data_frame = Frame( top_paned_window )
+        self.data_frame.pack(fill=BOTH, expand=1)
         title_frame = Frame( self.data_frame )
+        title_frame.pack(fill=BOTH, expand=1)
 
         yvalue = tk.StringVar()  # 窗体自带的文本，新建一个值
         year_box = ttk.Combobox(title_frame, textvariable=yvalue, state='readonly')  # 初始化
@@ -43,15 +43,7 @@ class ReportMainFrame(Frame ):
         query = Button(title_frame, text='查询', command = lambda :self.query_report( yvalue.get(), qvalue.get()))
         query.pack(side=LEFT)
 
-        # self.pb = ttk.Progressbar(title_frame, length=400, value=0, mode="determinate")
-        # self.pb.pack(pady=10)
-        # startbtn = Button(title_frame, text="开始", command=lambda :root.start_progress(self))
-        # startbtn.pack()
-        title_frame.pack()
-        # load current report
         self.query_current_report()
-        top_paned_window.add(self.data_frame)
-        self.data_frame.pack(fill=BOTH, expand=1)
 
         bottom_paned_window = PanedWindow(main_paned_window, orient=HORIZONTAL, sashrelief=SUNKEN)
         main_paned_window.add(bottom_paned_window)
@@ -222,5 +214,5 @@ if __name__ == '__main__':
     # 设置窗口宽高固定
     window.resizable(True, True)
     reportframe = ReportMainFrame(window)
-    reportframe.pack()
+    reportframe.pack(fill=BOTH, expand=1)
     mainloop()
