@@ -2,7 +2,7 @@
 from tkinter import  *
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from Utils.Mail import Mail
+from Utils.Mail163 import Mail
 
 
 class MainFrame(Frame ):
